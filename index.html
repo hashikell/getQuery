@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+
+    <title>Get Query</title>
+
+    <link rel="stylesheet" href="">
+  </head>
+  <body>
+    <h1>Get Query</h1>
+
+    <p>Get URL Query as JavaScript's Object.
+    <a href="https://github.com/hashikell/getQuery/">View on GitHub</a></p>
+
+    SOURCE CODE:
+    <pre id="sourceCode"></pre>
+
+    USAGE:
+    <pre id="usage"></pre>
+
+    RESULT:
+    <pre id="result"></pre>
+
+    <script id="sourceCodeImplement">
+      function getQuery(search) {
+        if (!search || search.length < 2) { return {}; }
+        return search
+          .slice(1)  // remove '?'
+          .split('&')
+          .filter(function(str) {
+            return str && str.length >= 1;
+          })
+          .map(function(str) {
+            return str.split('=');
+          })
+          .map(function(xs) {
+            function newObj(key, value) {
+              var o = {}; o[key] = value;
+              return o;
+            }
+            return (xs.length >= 2) ? newObj(xs[0], decodeURIComponent(xs[1])) : newObj(xs[0], '');
+          })
+          .reduce(function(a, b) { return Object.assign({}, a, b); });
+      }
+    </script>
+
+    <script id="usageScript">
+      var query = getQuery(location.search);
+      document.getElementById('result').innerHTML = JSON.stringify(query);
+    </script>
+
+    <script>
+      document.getElementById('sourceCode').innerHTML = document.getElementById('sourceCodeImplement').innerText;
+      document.getElementById('usage').innerHTML = document.getElementById('usageScript').innerText;
+    </script>
+
+  </body>
+</html>
